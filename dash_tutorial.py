@@ -8,66 +8,74 @@ from dash.dependencies import Input, Output
 
 import pandas as pd
 
-app = dash.Dash()
-
+#read data
 df = pd.read_csv(
     'https://raw.githubusercontent.com/plotly/'
     'datasets/master/gapminderDataFiveYear.csv')
 
+app = dash.Dash()
 
-df.head()
-df.info()
-
-markdown_text = '''
-$a/b$
-'''
-len(df['continent'].unique())
+# Boostrap CSS.
+app.css.append_css({'external_url': 'https://cdn.rawgit.com/plotly/dash-app-stylesheets/2d266c578d2a6e8850ebce48fdb52759b2aef506/stylesheet-oil-and-gas.css'})
+markdown_text = '...is running on AWS in a docker container'
 
 #############################
 #app Layout
 #############################
 app.layout = html.Div([
-    #headline
-    html.H1(children='Hello Dash'),
-    #some markdown text
-    dcc.Markdown(children=markdown_text),
-    ##text input
     html.Div([
-        dcc.Input(id='my-id', value='Dash App', type='text'),
-        html.Div(id='my-div'),
-        html.Div(id='my2-div')
-            ]),
+        #headline
+        html.H1(children='Henriks first dash app'),
+        #some markdown text
+        dcc.Markdown(children=markdown_text),
+        ##text input
+        html.Div([
+            dcc.Input(id='my-id', value='Type some nonsense', type='text'),
+            html.Div(id='my-div'),
+                ])
+    ], className="row"),
     #multi select component
-    html.Label('Select Continent'),
-        dcc.Dropdown(
-            id='SelectContinent',
-            options=[
-                {'label': df['continent'].unique()[0],
-                'value': df['continent'].unique()[0]},
-                {'label': df['continent'].unique()[1],
-                'value': df['continent'].unique()[1]},
-                {'label': df['continent'].unique()[2],
-                'value': df['continent'].unique()[2]},
-                {'label': df['continent'].unique()[3],
-                'value': df['continent'].unique()[3]},
-                {'label': df['continent'].unique()[4],
-                'value': df['continent'].unique()[4]}
-            ],
-            value=[],
-            multi=True
-        ),
+    #html.Div('Select Continent(s)'),
+    html.Div([
+        html.Div([
+            html.B('Select continents'),
+            dcc.Dropdown(
+                id='SelectContinent',
+                options=[
+                    {'label': df['continent'].unique()[0],
+                    'value': df['continent'].unique()[0]},
+                    {'label': df['continent'].unique()[1],
+                    'value': df['continent'].unique()[1]},
+                    {'label': df['continent'].unique()[2],
+                    'value': df['continent'].unique()[2]},
+                    {'label': df['continent'].unique()[3],
+                    'value': df['continent'].unique()[3]},
+                    {'label': df['continent'].unique()[4],
+                    'value': df['continent'].unique()[4]}
+                ],
+                value=[df['continent'].unique()[0],
+                        df['continent'].unique()[1],
+                        df['continent'].unique()[2]],
+                multi=True
+            )
+            ],className='six columns'),
+        html.Div([
+            html.B('Select the year in question'),
+            dcc.Slider(
+                id='year-slider',
+                min=df['year'].min(),
+                max=df['year'].max(),
+                value=df['year'].min(),
+                marks={str(year): str(year) for year in df['year'].unique()}
+            )
+            ],className='five columns')
+    ], className="row"),
     #graph
     dcc.Graph(
         id='life-exp-vs-gdp'
-    ),
-    dcc.Slider(
-        id='year-slider',
-        min=df['year'].min(),
-        max=df['year'].max(),
-        value=df['year'].min(),
-        marks={str(year): str(year) for year in df['year'].unique()}
     )
-])
+], className='ten columns offset-by-one'
+)
 
 
 
@@ -105,11 +113,6 @@ def update_figure(selected_conti, selected_year):
     }
     return figure
 
-@app.callback(
-    dash.dependencies.Output('my2-div', component_property='children'),
-    [dash.dependencies.Input('SelectContinent', 'value')])
-def update_selection(selected_conti):
-    return selected_conti
 
 
 
@@ -118,7 +121,17 @@ def update_selection(selected_conti):
     [Input(component_id='my-id', component_property='value')]
 )
 def update_output_div(input_value):
-    return 'You\'ve entered "{}"'.format(input_value)
+    if (input_value == 'Type some nonsense' or len(input_value)==0):
+        return ''
+    else:
+        out = len(input_value.split())
+        return 'You\'ve entered '+str(out) +' words. Awesome!'
+
 
 if __name__ == '__main__':
     app.run_server()
+
+
+test = 'hi you motherf...'
+
+len(test.split())
