@@ -34,7 +34,7 @@ markdown_text = '...is running on AWS in a docker container'
 app.layout = html.Div([
     html.Div([
         #headline
-        html.H1(children='Henriks first dash app'),
+        html.H1(children='Playing around with dash'),
         #some markdown text
         dcc.Markdown(children=markdown_text),
         ##text input
@@ -138,4 +138,4 @@ def update_output_div(input_value):
 
 
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True, host= '0.0.0.0')
