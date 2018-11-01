@@ -3,10 +3,20 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_auth
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
 import pandas as pd
+
+#read valid user and key pairs from file
+with open('key.txt','r') as f:
+    VALID_USERNAME_PASSWORD_PAIRS = [f.read()[:-1].split(',')]
+VALID_USERNAME_PASSWORD_PAIRS
+VALID_USERNAME_PASSWORD_PAIRS1 = [
+    ['hello', 'world']
+]
+VALID_USERNAME_PASSWORD_PAIRS1
 
 #read data
 df = pd.read_csv(
@@ -14,6 +24,11 @@ df = pd.read_csv(
     'datasets/master/gapminderDataFiveYear.csv')
 
 app = dash.Dash(__name__)
+auth = dash_auth.BasicAuth(
+    app,
+    VALID_USERNAME_PASSWORD_PAIRS
+)
+
 # Boostrap CSS.
 #app.css.append_css({'external_url': 'https://cdn.rawgit.com/plotly/dash-app-stylesheets/2d266c578d2a6e8850ebce48fdb52759b2aef506/stylesheet-oil-and-gas.css'})
 markdown_text = '...is running on AWS in a docker container'
