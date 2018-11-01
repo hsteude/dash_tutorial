@@ -12,11 +12,6 @@ import pandas as pd
 #read valid user and key pairs from file
 with open('key.txt','r') as f:
     VALID_USERNAME_PASSWORD_PAIRS = [f.read()[:-1].split(',')]
-VALID_USERNAME_PASSWORD_PAIRS
-VALID_USERNAME_PASSWORD_PAIRS1 = [
-    ['hello', 'world']
-]
-VALID_USERNAME_PASSWORD_PAIRS1
 
 #read data
 df = pd.read_csv(
