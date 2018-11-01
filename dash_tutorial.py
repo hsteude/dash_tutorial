@@ -13,10 +13,9 @@ df = pd.read_csv(
     'https://raw.githubusercontent.com/plotly/'
     'datasets/master/gapminderDataFiveYear.csv')
 
-app = dash.Dash()
-
+app = dash.Dash(__name__)
 # Boostrap CSS.
-app.css.append_css({'external_url': 'https://cdn.rawgit.com/plotly/dash-app-stylesheets/2d266c578d2a6e8850ebce48fdb52759b2aef506/stylesheet-oil-and-gas.css'})
+#app.css.append_css({'external_url': 'https://cdn.rawgit.com/plotly/dash-app-stylesheets/2d266c578d2a6e8850ebce48fdb52759b2aef506/stylesheet-oil-and-gas.css'})
 markdown_text = '...is running on AWS in a docker container'
 
 #############################
@@ -36,7 +35,6 @@ app.layout = html.Div([
     ], className="row"),
     #multi select component
     #html.Div('Select Continent(s)'),
-    html.Div([
         html.Div([
             html.B('Select continents'),
             dcc.Dropdown(
@@ -60,15 +58,16 @@ app.layout = html.Div([
             )
             ],className='six columns'),
         html.Div([
-            html.B('Select the year in question'),
-            dcc.Slider(
-                id='year-slider',
-                min=df['year'].min(),
-                max=df['year'].max(),
-                value=df['year'].min(),
-                marks={str(year): str(year) for year in df['year'].unique()}
-            )
-            ],className='five columns')
+            html.Div([
+                html.B('Select the year in question'),
+                dcc.Slider(
+                    id='year-slider',
+                    min=df['year'].min(),
+                    max=df['year'].max(),
+                    value=df['year'].max(),
+                    marks={str(year): str(year) for year in df['year'].unique()}
+                )
+                ],className='five columns')
     ], className="row"),
     #graph
     dcc.Graph(
